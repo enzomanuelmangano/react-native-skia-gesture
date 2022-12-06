@@ -66,15 +66,15 @@ export default function App() {
 }
 ```
 
-If the element is a Circle, Rect or RoundedRect, the package will automatically derive its touchablePath. Alternatively it will have to be passed as a parameter to the TouchableComponent.
+If the element is a **Circle**, **Rect** or **RoundedRect**, the package will automatically derive its **touchablePath**. Alternatively it will have to be passed as a parameter to the TouchableComponent.
 
 ```jsx
 ...
-const touchablePath = useComputed(() => {
+const touchablePath = useComputedValue(() => {
   const path = new Path();
   path.addCircle(cx.current, cy.current, 50);
   return path;
-});
+}, [cx, cy]);
 
 return (
   <Canvas style={styles.fill}>
