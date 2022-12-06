@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-skia-handler": ["./src/index"]
+      "react-native-skia-gesture": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

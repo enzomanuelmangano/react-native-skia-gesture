@@ -1,11 +1,11 @@
 <h1 align="center">
-React Native Skia Handler 🤌🏽
+React Native Skia Gesture 🤌🏽
 </h1>
 
 _A detection system for React Native Skia components._
 
 <div align="center">
-    <img src="https://github.com/enzomanuelmangano/react-native-skia-handler/blob/main/.assets/example.gif" title="react-native-skia-handler">
+    <img src="https://github.com/enzomanuelmangano/react-native-skia-gesture/blob/main/.assets/example.gif" title="react-native-skia-gesture">
 </div>
 
 ### Motivation
@@ -22,13 +22,13 @@ This package, simply provides a set of APIs to be able to interact directly with
 Open a Terminal in your project's folder and install the library using `yarn`:
 
 ```sh
-yarn add react-native-skia-handler
+yarn add react-native-skia-gesture
 ```
 
 or with `npm`:
 
 ```sh
-npm install react-native-skia-handler
+npm install react-native-skia-gesture
 ```
 
 ## Usage
@@ -43,7 +43,7 @@ import {
   withTouchableHandler,
   Canvas,
   useGestureHandler,
-} from 'react-native-skia-handler';
+} from 'react-native-skia-gesture';
 
 const TouchableCircle = withTouchableHandler(Circle);
 

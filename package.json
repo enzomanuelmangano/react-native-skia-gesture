@@ -1,5 +1,5 @@
 {
-  "name": "react-native-skia-handler",
+  "name": "react-native-skia-gesture",
   "version": "0.1.5",
   "description": "A detection system for React Native Skia components",
   "main": "lib/commonjs/index",
@@ -40,13 +40,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/enzomanuelmangano/react-native-skia-handler",
+  "repository": "https://github.com/enzomanuelmangano/react-native-skia-gesture",
   "author": "Enzo Manuel Mangano <enzomanuelmangano@gmail.com> (https://github.com/enzomanuelmangano)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/enzomanuelmangano/react-native-skia-handler/issues"
+    "url": "https://github.com/enzomanuelmangano/react-native-skia-gesture/issues"
   },
-  "homepage": "https://github.com/enzomanuelmangano/react-native-skia-handler#readme",
+  "homepage": "https://github.com/enzomanuelmangano/react-native-skia-gesture#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

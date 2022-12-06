@@ -11,7 +11,7 @@ import {
   withTouchableHandler,
   Canvas,
   useGestureHandler,
-} from 'react-native-skia-handler';
+} from 'react-native-skia-gesture';
 
 const TouchableCircle = withTouchableHandler(Circle);
 const TouchableRect = withTouchableHandler(Rect);
