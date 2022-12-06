@@ -1,2 +1,3 @@
 export * from './canvas';
-export * from './with-touchable-handler';
+export * from './hoc';
+export * from './hooks/use-gesture-handler';
