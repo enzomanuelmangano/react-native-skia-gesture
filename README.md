@@ -70,7 +70,6 @@ If the element is a Circle, Rect or RoundedRect, the package will automatically 
 
 ```jsx
 ...
-
 const touchablePath = useComputed(() => {
   const path = new Path();
   path.addCircle(cx.current, cy.current, 50);
@@ -101,7 +100,7 @@ It's a HOC with which to wrap all Skia components with which you want to interac
 
 ### `useGestureHandler`
 
-It's an hook from which _onStart_, _onActive_, _onEnd_ interactions can be managed. The hook provides as the second parameter of each callback a context that can be optionally used (strongly inspired by the [useAnimatedGestureHandler](https://docs.swmansion.com/react-native-reanimated/docs/2.3.x/api/hooks/useAnimatedGestureHandler/) hook).
+It's a hook from which _onStart_, _onActive_, _onEnd_ interactions can be managed. The hook provides as the second parameter of each callback a context that can be optionally used (strongly inspired by the [useAnimatedGestureHandler](https://docs.swmansion.com/react-native-reanimated/docs/2.3.x/api/hooks/useAnimatedGestureHandler/) hook).
 
 ---
 
