@@ -10,7 +10,7 @@ _A detection system for React Native Skia components._
 
 ### Motivation
 
-React Native Skia, provides many declarative APIs for building screens using React Components. However, [Skia components are not real components, but abstract representations of a part of a drawing](https://github.com/Shopify/react-native-skia/issues/513#issuecomment-1290126304). Therefore, they do not contain any information about location.
+React Native Skia, provides many declarative APIs for building screens using React Components. However, [Skia components are not real components, but abstract representations of a part of a drawing](https://github.com/Shopify/react-native-skia/issues/513#issuecomment-1290126304).
 Therefore direct interactions with individual Skia components can only be achieved indirectly from the Canvas (trying to figure out if the point on the screen that was clicked is within the element we want to interact with).
 
 This package, simply provides a set of APIs to be able to interact directly with individual components.
