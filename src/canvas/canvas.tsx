@@ -1,7 +1,7 @@
 import {
   Canvas as SkiaCanvas,
   CanvasProps,
-  useTouchHandler,
+  useMultiTouchHandler,
   useValue,
 } from '@shopify/react-native-skia';
 import React, { useEffect } from 'react';
@@ -10,9 +10,9 @@ import { TouchHandlerContext, TouchableHandlerContextType } from './context';
 const Canvas: React.FC<CanvasProps> = ({ children, onTouch, ...props }) => {
   const touchableRefs = useValue<TouchableHandlerContextType['current']>({});
 
-  const activeKey = useValue<string | null>(null);
+  const activeKey = useValue<string[]>([]);
 
-  const touchHandler = useTouchHandler(
+  const touchHandler = useMultiTouchHandler(
     {
       onStart: (event) => {
         const keys = Object.keys(touchableRefs.current);
@@ -21,21 +21,41 @@ const Canvas: React.FC<CanvasProps> = ({ children, onTouch, ...props }) => {
           const touchableItem = touchableRefs.current[key];
 
           if (touchableItem?.isPointInPath(event)) {
-            activeKey.current = key;
+            activeKey.current.push(`${key}__${event.id}`);
             touchableItem.onStart?.(event);
             return;
           }
         }
       },
       onActive: (event) => {
-        if (!activeKey.current) return;
-        const touchableItem = touchableRefs.current[activeKey.current];
+        const activatedKey = activeKey.current.find((key) =>
+          key.includes(event.id.toString())
+        );
+        if (!activatedKey) {
+          return;
+        }
+        const indexedKey = activatedKey.split('__')?.[0];
+        if (!indexedKey) {
+          return;
+        }
+        const touchableItem = touchableRefs.current[indexedKey];
         return touchableItem?.onActive?.(event);
       },
       onEnd: (event) => {
-        if (!activeKey.current) return;
-        const touchableItem = touchableRefs.current[activeKey.current];
-        activeKey.current = null;
+        const activatedKey = activeKey.current.find((key) =>
+          key.includes(event.id.toString())
+        );
+        if (!activatedKey) {
+          return;
+        }
+        const indexedKey = activatedKey.split('__')?.[0];
+        if (!indexedKey) {
+          return;
+        }
+        const touchableItem = touchableRefs.current[indexedKey];
+        activeKey.current = activeKey.current.filter(
+          (key) => !key.includes(event.id.toString())
+        );
         return touchableItem?.onEnd?.(event);
       },
     },
