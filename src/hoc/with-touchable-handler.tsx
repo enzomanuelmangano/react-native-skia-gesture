@@ -41,6 +41,8 @@ const getSkiaPath = (key: string, props: any) => {
       return getRectPath(unwrappedProps);
     case 'RoundedRect':
       return getRoundedRectPath(unwrappedProps);
+    case 'Path':
+      return unwrappedProps.path;
     default:
       return null;
   }
