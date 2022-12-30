@@ -35,17 +35,12 @@ npm install react-native-skia-gesture
 
 ```jsx
 import {
-  Circle,
   useValue,
 } from '@shopify/react-native-skia';
 
-import {
-  withTouchableHandler,
-  Canvas,
+import Touchable, {
   useGestureHandler,
 } from 'react-native-skia-gesture';
-
-const TouchableCircle = withTouchableHandler(Circle);
 
 export default function App() {
   const cx = useValue(100);
@@ -63,14 +58,14 @@ export default function App() {
   });
 
   return (
-    <Canvas style={styles.fill}>
-      <TouchableCircle cx={cx} cy={cy} r={50} color="red" {...circleGesture} />
-    </Canvas>
+    <Touchable.Canvas style={styles.fill}>
+      <Touchable.Circle cx={cx} cy={cy} r={50} color="red" {...circleGesture} />
+    </Touchable.Canvas>
   );
 }
 ```
 
-If the element is a **Circle**, **Rect** or **RoundedRect**, the package will automatically derive its **touchablePath**. Alternatively it will have to be passed as a parameter to the TouchableComponent.
+If the element is a **Circle**, **Rect**, **RoundedRect**, or a **Path** the package will automatically derive its **touchablePath**. Alternatively it will have to be passed as a parameter to the TouchableComponent.
 
 ```jsx
 ...
@@ -81,9 +76,9 @@ const touchablePath = useComputedValue(() => {
 }, [cx, cy]);
 
 return (
-  <Canvas style={styles.fill}>
-    <TouchableCircle cx={cx} cy={cy} r={50} color="red" touchablePath={touchablePath} {...circleGesture} />
-  </Canvas>
+  <Touchable.Canvas style={styles.fill}>
+    <Touchable.Circle cx={cx} cy={cy} r={50} color="red" touchablePath={touchablePath} {...circleGesture} />
+  </Touchable.Canvas>
 );
 ...
 ```
@@ -99,6 +94,13 @@ It's simply a Wrapper of Skia's Canvas.
 ### `withTouchableHandler`
 
 It's a HOC with which to wrap all Skia components with which you want to interact directly.
+
+```jsx
+import { Image } from '@shopify/react-native-skia';
+import { withTouchableHandler } from 'react-native-skia-gesture';
+
+const TouchableImage = withTouchableHandler(Image);
+```
 
 ---
 
