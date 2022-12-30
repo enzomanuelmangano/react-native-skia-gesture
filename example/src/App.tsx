@@ -1,10 +1,7 @@
 import {
   Blur,
-  Circle,
   Image,
   rect,
-  Rect,
-  RoundedRect,
   rrect,
   Skia,
   useComputedValue,
@@ -14,15 +11,7 @@ import {
 import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 
-import {
-  withTouchableHandler,
-  Canvas,
-  useGestureHandler,
-} from 'react-native-skia-gesture';
-
-const TouchableCircle = withTouchableHandler(Circle);
-const TouchableRect = withTouchableHandler(Rect);
-const TouchableRoundedRect = withTouchableHandler(RoundedRect);
+import Touchable, { useGestureHandler } from 'react-native-skia-gesture';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -100,7 +89,7 @@ export default function App() {
   if (!image) return <></>;
 
   return (
-    <Canvas style={styles.fill}>
+    <Touchable.Canvas style={styles.fill}>
       <Image
         image={image}
         fit="cover"
@@ -121,15 +110,14 @@ export default function App() {
         width={SCREEN_WIDTH}
         height={SCREEN_HEIGHT}
       />
-
-      <TouchableCircle
+      <Touchable.Circle
         cx={cx}
         cy={cy}
         r={RADIUS}
         color="rgba(255, 255, 255,0.2)"
         {...circleGesture}
       />
-      <TouchableRect
+      <Touchable.Rect
         x={rectX}
         y={rectY}
         width={RECT_WIDTH}
@@ -137,7 +125,7 @@ export default function App() {
         color="rgba(255, 255, 255,0.2)"
         {...rectGesture}
       />
-      <TouchableRoundedRect
+      <Touchable.RoundedRect
         x={roundedRectX}
         y={roundedRectY}
         r={ROUNDED_RECT_RADIUS}
@@ -146,7 +134,7 @@ export default function App() {
         color="rgba(255, 255, 255,0.2)"
         {...roundedRectGesture}
       />
-    </Canvas>
+    </Touchable.Canvas>
   );
 }
 
