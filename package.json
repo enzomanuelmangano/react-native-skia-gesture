@@ -55,7 +55,7 @@
     "@evilmartians/lefthook": "^1.2.2",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
-    "@shopify/react-native-skia": "0.1.157",
+    "@shopify/react-native-skia": "0.1.172",
     "@types/jest": "^28.1.2",
     "@types/react": "18.0.26",
     "@types/react-native": "0.70.0",
