@@ -1,4 +1,4 @@
-import { rect, rrect, Skia, SkRect } from '@shopify/react-native-skia';
+import { rect, rrect, Skia, type SkRect } from '@shopify/react-native-skia';
 
 type GetRectPathParams =
   | {
@@ -29,13 +29,17 @@ type GetRoundedRectPathParams = GetRectPathParams & {
 
 const getRoundedRectPath = (params: GetRoundedRectPathParams) => {
   const { r } = params;
+  const skPath = Skia.Path.Make();
   if ('rect' in params) {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const { rect } = params;
-    return Skia.Path.Make().addRRect(rrect(rect, r, r));
+    skPath.addRRect(rrect(rect, r, r));
+    return skPath;
   }
   const { x, y, width, height } = params;
-  return Skia.Path.Make().addRRect(rrect(rect(x, y, width, height), r, r));
+
+  skPath.addRRect(rrect(rect(x, y, width, height), r, r));
+  return skPath;
 };
 
 export { getRectPath, getRoundedRectPath };

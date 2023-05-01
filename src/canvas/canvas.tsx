@@ -1,11 +1,14 @@
 import {
   Canvas as SkiaCanvas,
-  CanvasProps,
+  type CanvasProps,
   useMultiTouchHandler,
   useValue,
 } from '@shopify/react-native-skia';
 import React, { useEffect } from 'react';
-import { TouchHandlerContext, TouchableHandlerContextType } from './context';
+import {
+  TouchHandlerContext,
+  type TouchableHandlerContextType,
+} from './context';
 
 const Canvas: React.FC<CanvasProps> = ({ children, onTouch, ...props }) => {
   const touchableRefs = useValue<TouchableHandlerContextType['current']>({});
@@ -19,7 +22,6 @@ const Canvas: React.FC<CanvasProps> = ({ children, onTouch, ...props }) => {
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i] as string;
           const touchableItem = touchableRefs.current[key];
-
           if (touchableItem?.isPointInPath(event)) {
             activeKey.current.push(`${key}__${event.id}`);
             touchableItem.onStart?.(event);
