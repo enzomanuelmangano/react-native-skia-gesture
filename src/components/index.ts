@@ -7,6 +7,7 @@ import {
 import { withTouchableHandler } from '../hoc';
 
 export { Canvas } from '../canvas';
+
 export const Circle = withTouchableHandler(SkiaCircle);
 export const RoundedRect = withTouchableHandler(SkiaRoundedRect);
 export const Rect = withTouchableHandler(SkiaRect);

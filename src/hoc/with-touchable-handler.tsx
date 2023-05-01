@@ -1,11 +1,10 @@
 import {
-  ExtendedTouchInfo,
-  SkiaProps,
-  SkiaValue,
-  SkPath,
-  TouchInfo,
+  type ExtendedTouchInfo,
+  type SkiaValue,
+  type SkPath,
+  type TouchInfo,
+  type Vector,
   useValue,
-  Vector,
 } from '@shopify/react-native-skia';
 import { useCallback, useEffect, useId } from 'react';
 import { getCirclePath } from '../utils/get-circle-path';
@@ -28,8 +27,7 @@ export type TouchableHandlerProps = {
   touchablePath: SkPath | SkiaValue<SkPath>;
 };
 
-type WithTouchableHandlerProps<T> = SkiaProps<T> &
-  Partial<TouchableHandlerProps>;
+type WithTouchableHandlerProps<T> = T & Partial<TouchableHandlerProps>;
 
 const getSkiaPath = (key: string, props: any) => {
   const unwrappedProps = unwrapAnimatedValueObject(props) as any;
@@ -96,8 +94,8 @@ const withTouchableHandler = <T,>(
         if (touchablePath) {
           return unwrapAnimatedValue(touchablePath).contains(point.x, point.y);
         }
-
         const path = getSkiaPath(Component.name, props);
+
         if (!path) {
           throw Error('No touchablePath provided');
         }

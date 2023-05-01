@@ -3,6 +3,7 @@ import {
   Image,
   rect,
   rrect,
+  Selector,
   Skia,
   useComputedValue,
   useImage,
@@ -51,17 +52,21 @@ export default function App() {
     },
   });
 
-  const roundedRectX = useValue(150);
-  const roundedRectY = useValue(300);
+  const roundedRectLayout = useValue({
+    x: 150,
+    y: 300,
+  });
 
   const roundedRectGesture = useGestureHandler<{ x: number; y: number }>({
     onStart: (_, context) => {
-      context.x = roundedRectX.current;
-      context.y = roundedRectY.current;
+      context.x = roundedRectLayout.current.x;
+      context.y = roundedRectLayout.current.y;
     },
     onActive: ({ translationX, translationY }, context) => {
-      roundedRectX.current = context.x + translationX;
-      roundedRectY.current = context.y + translationY;
+      roundedRectLayout.current = {
+        x: context.x + translationX,
+        y: context.y + translationY,
+      };
     },
   });
 
@@ -72,8 +77,8 @@ export default function App() {
     path.addRRect(
       rrect(
         rect(
-          roundedRectX.current,
-          roundedRectY.current,
+          roundedRectLayout.current.x,
+          roundedRectLayout.current.y,
           RECT_WIDTH,
           RECT_HEIGHT
         ),
@@ -82,7 +87,7 @@ export default function App() {
       )
     );
     return path;
-  }, [cx, cy, rectX, rectY, roundedRectX, roundedRectY]);
+  }, [cx, cy, rectX, rectY, roundedRectLayout]);
 
   const image = useImage(IMAGE_BACKGROUND);
 
@@ -126,8 +131,8 @@ export default function App() {
         {...rectGesture}
       />
       <Touchable.RoundedRect
-        x={roundedRectX}
-        y={roundedRectY}
+        x={Selector(roundedRectLayout, (r) => r.x)}
+        y={Selector(roundedRectLayout, (r) => r.y)}
         r={ROUNDED_RECT_RADIUS}
         width={RECT_WIDTH}
         height={RECT_HEIGHT}

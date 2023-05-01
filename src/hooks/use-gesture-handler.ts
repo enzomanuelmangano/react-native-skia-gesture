@@ -1,6 +1,6 @@
 import {
-  ExtendedTouchInfo,
-  TouchInfo,
+  type ExtendedTouchInfo,
+  type TouchInfo,
   useValue,
 } from '@shopify/react-native-skia';
 import { useCallback } from 'react';
