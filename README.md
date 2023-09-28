@@ -93,13 +93,28 @@ It's simply a Wrapper of Skia's Canvas.
 
 ### `withTouchableHandler`
 
-It's a HOC with which to wrap all Skia components with which you want to interact directly.
+It's a HOC with which to wrap all Skia components with which you want to interact directly. You will need to pass a `touchablePath` to the component.
 
 ```jsx
 import { Image } from '@shopify/react-native-skia';
 import { withTouchableHandler } from 'react-native-skia-gesture';
 
 const TouchableImage = withTouchableHandler(Image);
+const touchablePath = Skia.Path.Make().addCircle(x, y, 50);
+
+return (
+  <Touchable.Canvas style={styles.fill}>
+    <TouchableImage
+      image={image}
+      x={x}
+      y={y}
+      width={50}
+      height={50}
+      touchablePath={touchablePath}
+      {...circleGesture} 
+    />
+  </Touchable.Canvas>
+);
 ```
 
 ---
