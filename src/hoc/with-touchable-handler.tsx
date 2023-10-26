@@ -116,7 +116,7 @@ const withTouchableHandler = <T,>(
       } as any;
 
       return () => {
-        delete ref.current?.[id];
+        delete ref.current?.[`id:${id}`];
       };
     }, [id, isPointInPath, onActive, onEnd, onStart, ref, touchablePath]);
 
