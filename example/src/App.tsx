@@ -11,6 +11,7 @@ import {
 } from '@shopify/react-native-skia';
 import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
+import { useSharedValue } from 'react-native-reanimated';
 
 import Touchable, { useGestureHandler } from 'react-native-skia-gesture';
 
@@ -72,13 +73,13 @@ export default function App() {
 
   const clipPath = useComputedValue(() => {
     const path = Skia.Path.Make();
-    path.addCircle(cx.current, cy.current, RADIUS);
-    path.addRect(rect(rectX.current, rectY.current, RECT_WIDTH, RECT_HEIGHT));
+    path.addCircle(cx.value, cy.value, RADIUS);
+    path.addRect(rect(rectX.value, rectY.value, RECT_WIDTH, RECT_HEIGHT));
     path.addRRect(
       rrect(
         rect(
-          roundedRectLayout.current.x,
-          roundedRectLayout.current.y,
+          roundedRectLayout.value.x,
+          roundedRectLayout.value.y,
           RECT_WIDTH,
           RECT_HEIGHT
         ),
@@ -115,7 +116,7 @@ export default function App() {
         width={SCREEN_WIDTH}
         height={SCREEN_HEIGHT}
       />
-      <Touchable.Circle
+      {/* <Touchable.Circle
         cx={cx}
         cy={cy}
         r={RADIUS}
@@ -138,7 +139,7 @@ export default function App() {
         height={RECT_HEIGHT}
         color="rgba(255, 255, 255,0.2)"
         {...roundedRectGesture}
-      />
+      /> */}
     </Touchable.Canvas>
   );
 }

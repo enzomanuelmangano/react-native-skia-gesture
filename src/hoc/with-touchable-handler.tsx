@@ -1,37 +1,43 @@
 import {
-  type ExtendedTouchInfo,
   type SkiaValue,
   type SkPath,
-  type TouchInfo,
   type Vector,
-  useValue,
 } from '@shopify/react-native-skia';
 import { useCallback, useEffect, useId } from 'react';
+
+import { useTouchHandlerContext } from '../canvas/context';
 import { getCirclePath } from '../utils/get-circle-path';
 import { getRectPath, getRoundedRectPath } from '../utils/get-rect-path';
 import {
   unwrapAnimatedValue,
   unwrapAnimatedValueObject,
 } from '../utils/unwrap-animated-value';
-import { useTouchHandlerContext } from '../canvas/context';
 
-export type TranslationInfo = {
-  translationX: number;
-  translationY: number;
-};
+import type {
+  GestureStateChangeEvent,
+  GestureUpdateEvent,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
 
 export type TouchableHandlerProps = {
-  onStart: (touchInfo: TouchInfo) => void;
-  onActive: (touchInfo: ExtendedTouchInfo & TranslationInfo) => void;
-  onEnd: (touchInfo: ExtendedTouchInfo & TranslationInfo) => void;
+  onStart: (
+    touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
+  ) => void;
+  onActive: (
+    touchInfo: GestureUpdateEvent<PanGestureHandlerEventPayload>
+  ) => void;
+  onEnd: (
+    touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
+  ) => void;
   touchablePath: SkPath | SkiaValue<SkPath>;
 };
 
 type WithTouchableHandlerProps<T> = T & Partial<TouchableHandlerProps>;
 
-const getSkiaPath = (key: string, props: any) => {
-  const unwrappedProps = unwrapAnimatedValueObject(props) as any;
+export const getSkiaPath = (key: string, props: any) => {
+  'worklet';
 
+  const unwrappedProps = unwrapAnimatedValueObject(props) as any;
   switch (key) {
     case 'Circle':
       return getCirclePath(unwrappedProps);
@@ -47,7 +53,8 @@ const getSkiaPath = (key: string, props: any) => {
 };
 
 const withTouchableHandler = <T,>(
-  Component: (props: WithTouchableHandlerProps<T>) => JSX.Element
+  Component: (props: WithTouchableHandlerProps<T>) => JSX.Element,
+  componentName?: string
 ) => {
   return ({
     onStart: onStartProp,
@@ -59,42 +66,37 @@ const withTouchableHandler = <T,>(
     const id = useId();
     const ref = useTouchHandlerContext();
 
-    const startingPoint = useValue<Vector | null>(null);
-
     const onStart: TouchableHandlerProps['onStart'] = useCallback(
       (event) => {
-        startingPoint.current = { x: event.x, y: event.y };
+        'worklet';
         return onStartProp?.(event);
       },
-      [onStartProp, startingPoint]
+      [onStartProp]
     );
     const onActive: TouchableHandlerProps['onActive'] = useCallback(
       (event) => {
-        const translationX = event.x - (startingPoint.current?.x ?? 0);
-        const translationY = event.y - (startingPoint.current?.y ?? 0);
-        return onActiveProp?.({
-          ...event,
-          translationX,
-          translationY,
-        });
+        'worklet';
+        return onActiveProp?.(event);
       },
-      [onActiveProp, startingPoint]
+      [onActiveProp]
     );
     const onEnd: TouchableHandlerProps['onEnd'] = useCallback(
       (event) => {
-        const translationX = event.x - (startingPoint.current?.x ?? 0);
-        const translationY = event.y - (startingPoint.current?.y ?? 0);
-        return onEndProp?.({ ...event, translationX, translationY });
+        'worklet';
+        return onEndProp?.(event);
       },
-      [onEndProp, startingPoint]
+      [onEndProp]
     );
 
     const isPointInPath = useCallback(
       (point: Vector) => {
+        'worklet';
         if (touchablePath) {
           return unwrapAnimatedValue(touchablePath).contains(point.x, point.y);
         }
-        const path = getSkiaPath(Component.name, props);
+
+        if (!componentName) return false;
+        const path = getSkiaPath(componentName, props);
 
         if (!path) {
           throw Error('No touchablePath provided');
@@ -105,20 +107,23 @@ const withTouchableHandler = <T,>(
     );
 
     useEffect(() => {
-      ref.current = {
+      ref.value = {
         [`id:${id}`]: {
           isPointInPath,
           onStart,
           onActive,
           onEnd,
         },
-        ...ref.current,
+        ...ref.value,
       } as any;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, isPointInPath, onActive, onEnd, onStart]);
 
+    useEffect(() => {
       return () => {
-        delete ref.current?.[`id:${id}`];
+        delete ref.value?.[`id:${id}`];
       };
-    }, [id, isPointInPath, onActive, onEnd, onStart, ref, touchablePath]);
+    }, [id, props, ref, touchablePath]);
 
     return Component(props as any);
   };

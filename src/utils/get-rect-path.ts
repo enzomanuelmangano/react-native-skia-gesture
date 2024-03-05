@@ -1,4 +1,4 @@
-import { rect, rrect, Skia, type SkRect } from '@shopify/react-native-skia';
+import { Skia, type SkRect } from '@shopify/react-native-skia';
 
 type GetRectPathParams =
   | {
@@ -10,16 +10,18 @@ type GetRectPathParams =
   | { rect: SkRect };
 
 const getRectPath = (params: GetRectPathParams) => {
+  'worklet';
+
   const skPath = Skia.Path.Make();
   if ('rect' in params) {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const { rect } = params;
 
     skPath.addRect(rect);
     return skPath;
   }
   const { x, y, width, height } = params;
-  skPath.addRect(rect(x, y, width, height));
+
+  skPath.addRect(Skia.XYWHRect(x, y, width, height));
   return skPath;
 };
 
@@ -28,17 +30,20 @@ type GetRoundedRectPathParams = GetRectPathParams & {
 };
 
 const getRoundedRectPath = (params: GetRoundedRectPathParams) => {
+  'worklet';
+
   const { r } = params;
   const skPath = Skia.Path.Make();
   if ('rect' in params) {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const { rect } = params;
-    skPath.addRRect(rrect(rect, r, r));
+
+    skPath.addRRect(Skia.RRectXY(rect, r, r));
     return skPath;
   }
   const { x, y, width, height } = params;
 
-  skPath.addRRect(rrect(rect(x, y, width, height), r, r));
+  const roundedRect = Skia.RRectXY(Skia.XYWHRect(x, y, width, height), r, r);
+  skPath.addRRect(roundedRect);
   return skPath;
 };
 

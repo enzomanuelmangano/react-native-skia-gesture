@@ -1,19 +1,23 @@
-import {
-  type ExtendedTouchInfo,
-  type TouchInfo,
-  useValue,
-} from '@shopify/react-native-skia';
 import { useCallback } from 'react';
-import type { TranslationInfo } from '../hoc';
+import { useSharedValue } from 'react-native-reanimated';
+
+import type {
+  GestureStateChangeEvent,
+  GestureUpdateEvent,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
 
 type UseGestureHandlerParams<ContextType> = {
-  onStart?: (touchInfo: TouchInfo, context: ContextType) => void;
+  onStart?: (
+    touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
+    context: ContextType
+  ) => void;
   onActive?: (
-    extendedTouchInfo: ExtendedTouchInfo & TranslationInfo,
+    touchInfo: GestureUpdateEvent<PanGestureHandlerEventPayload>,
     context: ContextType
   ) => void;
   onEnd?: (
-    extendedTouchInfo: ExtendedTouchInfo & TranslationInfo,
+    touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
     context: ContextType
   ) => void;
 };
@@ -23,28 +27,33 @@ const useGestureHandler = <ContextType>(
 ) => {
   const { onStart, onActive, onEnd } = gestureHandlers;
 
-  const context = useValue<ContextType>({} as any);
+  const context = useSharedValue<ContextType>({} as any);
 
   const handleStart = useCallback(
-    (touchInfo: TouchInfo) => {
+    (touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
+      'worklet';
       if (!onStart) return;
-      return onStart(touchInfo, context.current);
+      return onStart(touchInfo, context.value);
     },
     [context, onStart]
   );
 
   const handleActive = useCallback(
-    (extendedTouchInfo: ExtendedTouchInfo & TranslationInfo) => {
+    (extendedTouchInfo: GestureUpdateEvent<PanGestureHandlerEventPayload>) => {
+      'worklet';
       if (!onActive) return;
-      return onActive(extendedTouchInfo, context.current);
+      return onActive(extendedTouchInfo, context.value);
     },
     [context, onActive]
   );
 
   const handleEnd = useCallback(
-    (extendedTouchInfo: ExtendedTouchInfo & TranslationInfo) => {
+    (
+      extendedTouchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
+    ) => {
+      'worklet';
       if (!onEnd) return;
-      return onEnd(extendedTouchInfo, context.current);
+      return onEnd(extendedTouchInfo, context.value);
     },
     [context, onEnd]
   );
