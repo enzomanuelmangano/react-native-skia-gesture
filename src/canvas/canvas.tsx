@@ -28,14 +28,13 @@ const Canvas: React.FC<CanvasProps> = ({ children, ...props }) => {
 
   const gesture = Gesture.Pan()
     .runOnJS(true)
-    .enableTrackpadTwoFingerGesture(false)
-    .activeOffsetX(1000)
     .onBegin((event) => {
       const keys = Object.keys(loadedRefs);
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i] as string;
         const touchableItem = loadedRefs[key];
-        if (touchableItem?.isPointInPath(event)) {
+        const isPointInPath = touchableItem?.isPointInPath(event);
+        if (isPointInPath && touchableItem?.onStart) {
           activeKey.value.push(`${key}__${event.handlerTag}`);
           touchableItem.onStart?.(event);
         }
@@ -45,14 +44,17 @@ const Canvas: React.FC<CanvasProps> = ({ children, ...props }) => {
       const activatedKey = activeKey.value.find((key) =>
         key.includes(event.handlerTag.toString())
       );
+
       if (!activatedKey) {
         return;
       }
       const indexedKey = activatedKey.split('__')?.[0];
+
       if (!indexedKey) {
         return;
       }
       const touchableItem = loadedRefs[indexedKey];
+
       return touchableItem?.onActive?.(event);
     })
     .onFinalize((event) => {
