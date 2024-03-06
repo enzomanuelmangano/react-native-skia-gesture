@@ -16,7 +16,6 @@ import type { CanvasProps } from '@shopify/react-native-skia';
 
 type TouchableCanvasProps = CanvasProps & {
   panGesture?: PanGesture;
-  runOnJS?: boolean;
 };
 
 const Canvas: React.FC<TouchableCanvasProps> = ({
