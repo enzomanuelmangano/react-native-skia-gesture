@@ -35,12 +35,6 @@ Open a Terminal in your project's folder and then install the library using `yar
 yarn add react-native-skia-gesture
 ```
 
-or with `npm`:
-
-```sh
-npm install react-native-skia-gesture
-```
-
 ## Usage
 
 ```jsx
