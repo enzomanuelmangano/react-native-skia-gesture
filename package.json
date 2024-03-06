@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-gesture",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A detection system for React Native Skia components",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
