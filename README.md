@@ -17,15 +17,19 @@ This package, simply provides a set of APIs to be able to interact directly with
 
 ## Installation
 
-**You need to have already installed [@shopify/react-native-skia (>= 0.1.157)](https://shopify.github.io/react-native-skia/docs/getting-started/installation)**
+**You need to have already installed [@shopify/react-native-skia (>= 0.1.221)](https://shopify.github.io/react-native-skia/docs/getting-started/installation)**
 
 ### Since v0.3.0
 
 You need to install Reanimated (v3.0.0+) and Gesture Handler (v2.0.0+)
 
-- yarn add react-native-reanimated react-native-gesture-handler
+```sh
+yarn add react-native-reanimated react-native-gesture-handler
+```
 
-Open a Terminal in your project's folder and install the library using `yarn`:
+### Install Skia Gesture
+
+Open a Terminal in your project's folder and then install the library using `yarn`:
 
 ```sh
 yarn add react-native-skia-gesture
@@ -54,7 +58,7 @@ export default function App() {
 
   const circleGesture = useGestureHandler<{ x: number; y: number }>({
     onStart: (_, context) => {
-      'worklet';
+      'worklet'; // Remember the 'worklet' keyword
       context.x = cx.value;
       context.y = cy.value;
     },
