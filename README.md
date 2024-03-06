@@ -4,10 +4,6 @@ React Native Skia Gesture 🤌🏽
 
 _A detection system for React Native Skia components._
 
-<div align="center">
-    <img src="https://github.com/enzomanuelmangano/react-native-skia-gesture/blob/main/.assets/example.gif" title="react-native-skia-gesture">
-</div>
-
 ### Motivation
 
 React Native Skia, provides many declarative APIs for building screens using React Components. However, [Skia components are not real components, but abstract representations of a part of a drawing](https://github.com/Shopify/react-native-skia/issues/513#issuecomment-1290126304).
