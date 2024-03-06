@@ -1,92 +1,108 @@
+import { Canvas as SkiaCanvas } from '@shopify/react-native-skia';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Canvas as SkiaCanvas,
-  type CanvasProps,
-  useMultiTouchHandler,
-  useValue,
-  SkiaDomView,
-} from '@shopify/react-native-skia';
-import React, { useEffect } from 'react';
+  Gesture,
+  GestureDetector,
+  PanGesture,
+} from 'react-native-gesture-handler';
+import Animated, { useSharedValue } from 'react-native-reanimated';
+
 import {
   TouchHandlerContext,
   type TouchableHandlerContextType,
 } from './context';
 
-const Canvas = React.forwardRef<SkiaDomView, CanvasProps>(
-  ({ children, onTouch, ...props }, ref) => {
-    const touchableRefs = useValue<TouchableHandlerContextType['current']>({});
+import type { CanvasProps } from '@shopify/react-native-skia';
 
-    const activeKey = useValue<string[]>([]);
+type TouchableCanvasProps = CanvasProps & {
+  panGesture?: PanGesture;
+};
 
-    const touchHandler = useMultiTouchHandler(
-      {
-        onStart: (event) => {
-          const keys = Object.keys(touchableRefs.current);
-          for (let i = 0; i < keys.length; i++) {
-            const key = keys[i] as string;
-            const touchableItem = touchableRefs.current[key];
-            if (touchableItem?.isPointInPath(event)) {
-              activeKey.current.push(`${key}__${event.id}`);
-              touchableItem.onStart?.(event);
-              return;
-            }
-          }
-        },
-        onActive: (event) => {
-          const activatedKey = activeKey.current.find((key) =>
-            key.includes(event.id.toString())
-          );
-          if (!activatedKey) {
-            return;
-          }
-          const indexedKey = activatedKey.split('__')?.[0];
-          if (!indexedKey) {
-            return;
-          }
-          const touchableItem = touchableRefs.current[indexedKey];
-          return touchableItem?.onActive?.(event);
-        },
-        onEnd: (event) => {
-          const activatedKey = activeKey.current.find((key) =>
-            key.includes(event.id.toString())
-          );
-          if (!activatedKey) {
-            return;
-          }
-          const indexedKey = activatedKey.split('__')?.[0];
-          if (!indexedKey) {
-            return;
-          }
-          const touchableItem = touchableRefs.current[indexedKey];
-          activeKey.current = activeKey.current.filter(
-            (key) => !key.includes(event.id.toString())
-          );
-          return touchableItem?.onEnd?.(event);
-        },
-      },
-      [touchableRefs, activeKey]
-    );
+const Canvas: React.FC<TouchableCanvasProps> = ({
+  children,
+  panGesture = Gesture.Pan(),
+  ...props
+}) => {
+  // Instead of value, provide a subscribe method and reload the refs
+  const touchableRefs: TouchableHandlerContextType = useMemo(() => {
+    return { value: {} };
+  }, []);
 
-    useEffect(() => {
-      return () => {
-        touchableRefs.current = {};
-      };
-    }, [touchableRefs]);
+  const activeKey = useSharedValue<string[]>([]);
 
-    return (
-      <SkiaCanvas
-        ref={ref as React.RefObject<SkiaDomView> & React.Ref<SkiaDomView>}
-        {...props}
-        onTouch={(touchInfo) => {
-          touchHandler(touchInfo);
-          return onTouch?.(touchInfo);
-        }}
-      >
-        <TouchHandlerContext.Provider value={touchableRefs}>
-          {children}
-        </TouchHandlerContext.Provider>
-      </SkiaCanvas>
-    );
-  }
-);
+  const [loadedRefs, prepareLoadedRefs] = useState<
+    TouchableHandlerContextType['value']
+  >({});
+
+  setTimeout(() => {
+    prepareLoadedRefs(touchableRefs.value);
+  }, 1000);
+
+  const mainGesture = panGesture
+    .onBegin((event) => {
+      const keys = Object.keys(loadedRefs);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i] as string;
+        const touchableItem = loadedRefs[key];
+        const isPointInPath = touchableItem?.isPointInPath(event);
+        if (isPointInPath && touchableItem?.onStart) {
+          activeKey.value.push(`${key}__${event.handlerTag}`);
+          touchableItem.onStart?.(event);
+        }
+      }
+    })
+    .onUpdate((event) => {
+      const activatedKey = activeKey.value.find((key) =>
+        key.includes(event.handlerTag.toString())
+      );
+
+      if (!activatedKey) {
+        return;
+      }
+      const indexedKey = activatedKey.split('__')?.[0];
+
+      if (!indexedKey) {
+        return;
+      }
+      const touchableItem = loadedRefs[indexedKey];
+
+      return touchableItem?.onActive?.(event);
+    })
+    .onFinalize((event) => {
+      const activatedKey = activeKey.value.find((key) =>
+        key.includes(event.handlerTag.toString())
+      );
+      if (!activatedKey) {
+        return;
+      }
+      const indexedKey = activatedKey.split('__')?.[0];
+      if (!indexedKey) {
+        return;
+      }
+      const touchableItem = loadedRefs[indexedKey];
+      activeKey.value = activeKey.value.filter(
+        (key) => !key.includes(event.handlerTag.toString())
+      );
+      return touchableItem?.onEnd?.(event as any);
+    });
+
+  useEffect(() => {
+    return () => {
+      touchableRefs.value = {};
+    };
+  }, [touchableRefs]);
+
+  return (
+    <GestureDetector gesture={mainGesture}>
+      <Animated.View>
+        <SkiaCanvas {...props}>
+          <TouchHandlerContext.Provider value={touchableRefs}>
+            {children}
+          </TouchHandlerContext.Provider>
+        </SkiaCanvas>
+      </Animated.View>
+    </GestureDetector>
+  );
+};
 
 export { Canvas };

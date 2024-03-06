@@ -1,23 +1,32 @@
-import type {
-  ExtendedTouchInfo,
-  TouchInfo,
-  Vector,
-} from '@shopify/react-native-skia';
 import React, { useContext } from 'react';
 
+import type { Vector } from '@shopify/react-native-skia';
+import type {
+  GestureStateChangeEvent,
+  GestureUpdateEvent,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
+
 export type TouchableHandlerContextType = {
-  current: Record<
+  value: Record<
     string,
     {
-      onStart: (touchInfo: TouchInfo) => void;
-      onActive: (touchInfo: ExtendedTouchInfo) => void;
-      onEnd: (touchInfo: ExtendedTouchInfo) => void;
+      onStart: (
+        touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
+      ) => void;
+      onActive: (
+        touchInfo: GestureUpdateEvent<PanGestureHandlerEventPayload>
+      ) => void;
+      onEnd: (
+        touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
+      ) => void;
       isPointInPath: (point: Vector) => boolean;
     }
   >;
 };
+
 const TouchHandlerContext = React.createContext<TouchableHandlerContextType>({
-  current: {},
+  value: {},
 });
 
 const useTouchHandlerContext = () => {
