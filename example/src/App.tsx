@@ -21,13 +21,12 @@ function App() {
 
   const circleGesture = useGestureHandler<{ x: number; y: number }>({
     onStart: (_, context) => {
-      console.log('onStart');
-
+      'worklet';
       context.x = cx.value;
       context.y = cy.value;
     },
     onActive: ({ translationX, translationY }, context) => {
-      console.log('onActive');
+      'worklet';
       cx.value = context.x + translationX;
       cy.value = context.y + translationY;
     },
@@ -38,10 +37,12 @@ function App() {
 
   const rectGesture = useGestureHandler<{ x: number; y: number }>({
     onStart: (_, context) => {
+      'worklet';
       context.x = rectX.value;
       context.y = rectY.value;
     },
     onActive: ({ translationX, translationY }, context) => {
+      'worklet';
       rectX.value = context.x + translationX;
       rectY.value = context.y + translationY;
     },

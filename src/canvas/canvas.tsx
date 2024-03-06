@@ -1,6 +1,10 @@
 import { Canvas as SkiaCanvas } from '@shopify/react-native-skia';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  PanGesture,
+} from 'react-native-gesture-handler';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 
 import {
@@ -10,7 +14,16 @@ import {
 
 import type { CanvasProps } from '@shopify/react-native-skia';
 
-const Canvas: React.FC<CanvasProps> = ({ children, ...props }) => {
+type TouchableCanvasProps = CanvasProps & {
+  panGesture?: PanGesture;
+  runOnJS?: boolean;
+};
+
+const Canvas: React.FC<TouchableCanvasProps> = ({
+  children,
+  panGesture = Gesture.Pan(),
+  ...props
+}) => {
   // Instead of value, provide a subscribe method and reload the refs
   const touchableRefs: TouchableHandlerContextType = useMemo(() => {
     return { value: {} };
@@ -26,8 +39,7 @@ const Canvas: React.FC<CanvasProps> = ({ children, ...props }) => {
     prepareLoadedRefs(touchableRefs.value);
   }, 1000);
 
-  const gesture = Gesture.Pan()
-    .runOnJS(true)
+  const mainGesture = panGesture
     .onBegin((event) => {
       const keys = Object.keys(loadedRefs);
       for (let i = 0; i < keys.length; i++) {
@@ -82,7 +94,7 @@ const Canvas: React.FC<CanvasProps> = ({ children, ...props }) => {
   }, [touchableRefs]);
 
   return (
-    <GestureDetector gesture={gesture}>
+    <GestureDetector gesture={mainGesture}>
       <Animated.View>
         <SkiaCanvas {...props}>
           <TouchHandlerContext.Provider value={touchableRefs}>
