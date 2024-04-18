@@ -1,5 +1,5 @@
 import { Canvas as SkiaCanvas } from '@shopify/react-native-skia';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Gesture,
   GestureDetector,
@@ -16,11 +16,15 @@ import type { CanvasProps } from '@shopify/react-native-skia';
 
 type TouchableCanvasProps = CanvasProps & {
   panGesture?: PanGesture;
+  timeoutBeforeCollectingRefs?: number;
 };
+
+const AnimatedSkiaCanvas = Animated.createAnimatedComponent(SkiaCanvas);
 
 const Canvas: React.FC<TouchableCanvasProps> = ({
   children,
   panGesture = Gesture.Pan(),
+  timeoutBeforeCollectingRefs = 100,
   ...props
 }) => {
   // Instead of value, provide a subscribe method and reload the refs
@@ -30,13 +34,23 @@ const Canvas: React.FC<TouchableCanvasProps> = ({
 
   const activeKey = useSharedValue<string[]>([]);
 
+  // This must be improved, it's a hack to wait for the refs to be loaded
   const [loadedRefs, prepareLoadedRefs] = useState<
     TouchableHandlerContextType['value']
   >({});
 
-  setTimeout(() => {
-    prepareLoadedRefs(touchableRefs.value);
-  }, 1000);
+  const ref = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    ref.current = setTimeout(() => {
+      prepareLoadedRefs(touchableRefs.value);
+    }, timeoutBeforeCollectingRefs);
+
+    return () => {
+      clearTimeout(ref.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeoutBeforeCollectingRefs]);
 
   const mainGesture = panGesture
     .onBegin((event) => {
@@ -94,13 +108,11 @@ const Canvas: React.FC<TouchableCanvasProps> = ({
 
   return (
     <GestureDetector gesture={mainGesture}>
-      <Animated.View>
-        <SkiaCanvas {...props}>
-          <TouchHandlerContext.Provider value={touchableRefs}>
-            {children}
-          </TouchHandlerContext.Provider>
-        </SkiaCanvas>
-      </Animated.View>
+      <AnimatedSkiaCanvas {...props}>
+        <TouchHandlerContext.Provider value={touchableRefs}>
+          {children}
+        </TouchHandlerContext.Provider>
+      </AnimatedSkiaCanvas>
     </GestureDetector>
   );
 };
