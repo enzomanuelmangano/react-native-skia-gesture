@@ -2,10 +2,6 @@
 React Native Skia Gesture 🤌🏽
 </h1>
 
- <div>
-    <img src="https://raw.githubusercontent.com/enzomanuelmangano/react-native-skia-gesture/main/.assets/demo.gif" title="react-native-skia-gesture">
-</div>
-
 _A detection system for React Native Skia components._
 
 ### Motivation
@@ -14,6 +10,12 @@ React Native Skia, provides many declarative APIs for building screens using Rea
 Therefore direct interactions with individual Skia components can only be achieved indirectly from the Canvas (trying to figure out if the point on the screen that was clicked is within the element we want to interact with).
 
 This package, simply provides a set of APIs to be able to interact directly with individual components.
+
+
+<a href="https://github.com/enzomanuelmangano/react-native-skia-gesture"> 
+  <img src="https://raw.githubusercontent.com/enzomanuelmangano/react-native-skia-gesture/main/.assets/demo.gif" title="react-native-skia-gesture">
+</a>
+
 
 ## Installation
 
