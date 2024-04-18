@@ -16,7 +16,7 @@ import type { CanvasProps } from '@shopify/react-native-skia';
 
 type TouchableCanvasProps = CanvasProps & {
   panGesture?: PanGesture;
-  timeoutBeforeCollectingRefs?: number;
+  timeoutBeforeCollectingRefs?: number; // default 100
 };
 
 const AnimatedSkiaCanvas = Animated.createAnimatedComponent(SkiaCanvas);

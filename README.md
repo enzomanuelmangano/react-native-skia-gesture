@@ -2,6 +2,10 @@
 React Native Skia Gesture 🤌🏽
 </h1>
 
+ <div>
+    <img src="https://raw.githubusercontent.com/enzomanuelmangano/react-native-skia-gesture/main/.assets/demo.gif" title="react-native-skia-gesture">
+</div>
+
 _A detection system for React Native Skia components._
 
 ### Motivation
