@@ -52,16 +52,20 @@ export default function App() {
   const cx = useSharedValue(100);
   const cy = useSharedValue(100);
 
-  const circleGesture = useGestureHandler<{ x: number; y: number }>({
-    onStart: (_, context) => {
+  const context = useSharedValue({ x: 0, y: 0 });
+
+  const circleGesture = useGestureHandler({
+    onStart: () => {
       'worklet'; // Remember the 'worklet' keyword
-      context.x = cx.value;
-      context.y = cy.value;
+      context.value = {
+        x: cx.value,
+        y: cy.value,
+      }
     },
     onActive: ({ translationX, translationY }, context) => {
       'worklet';
-      cx.value = context.x + translationX;
-      cy.value = context.y + translationY;
+      cx.value = context.value.x + translationX;
+      cy.value = context.value.y + translationY;
     },
   });
 
@@ -105,15 +109,17 @@ import { Gesture } from 'react-native-gesture-handler';
 
 const panGesture = Gesture.Pan().runOnJS(true)
 
-const circleGesture = useGestureHandler<{ x: number; y: number }>({
+const circleGesture = useGestureHandler({
   // You can avoid the 'worklet' keyword if you are running the gesture on JS thread
-  onStart: (_, context) => {
-    context.x = cx.value;
-    context.y = cy.value;
+  onStart: () => {
+    context.value = {
+      x: cx.value,
+      y: cy.value,
+    }
   },
-  onActive: ({ translationX, translationY }, context) => {
-    cx.value = context.x + translationX;
-    cy.value = context.y + translationY;
+  onActive: ({ translationX, translationY }) => {
+    cx.value = context.value.x + translationX;
+    cy.value = context.value.y + translationY;
   },
 });
 

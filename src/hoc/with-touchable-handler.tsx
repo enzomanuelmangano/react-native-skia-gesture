@@ -1,8 +1,4 @@
-import {
-  type SkiaValue,
-  type SkPath,
-  type Vector,
-} from '@shopify/react-native-skia';
+import { type SkPath, type Vector } from '@shopify/react-native-skia';
 import { useCallback, useEffect, useId } from 'react';
 
 import { useTouchHandlerContext } from '../canvas/context';
@@ -18,6 +14,7 @@ import type {
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
+import { SharedValue } from 'react-native-reanimated';
 
 export type TouchableHandlerProps = {
   onStart: (
@@ -29,7 +26,7 @@ export type TouchableHandlerProps = {
   onEnd: (
     touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
   ) => void;
-  touchablePath: SkPath | SkiaValue<SkPath>;
+  touchablePath: SkPath | SharedValue<SkPath>;
 };
 
 type WithTouchableHandlerProps<T> = T & Partial<TouchableHandlerProps>;

@@ -19,32 +19,44 @@ function App() {
   const cx = useSharedValue(100);
   const cy = useSharedValue(400);
 
-  const circleGesture = useGestureHandler<{ x: number; y: number }>({
-    onStart: (_, context) => {
+  const circleContext = useSharedValue({
+    x: 0,
+    y: 0,
+  });
+
+  const circleGesture = useGestureHandler({
+    onStart: () => {
       'worklet';
-      context.x = cx.value;
-      context.y = cy.value;
+      circleContext.value = {
+        x: cx.value,
+        y: cy.value,
+      };
     },
-    onActive: ({ translationX, translationY }, context) => {
+    onActive: ({ translationX, translationY }) => {
       'worklet';
-      cx.value = context.x + translationX;
-      cy.value = context.y + translationY;
+      cx.value = circleContext.value.x + translationX;
+      cy.value = circleContext.value.y + translationY;
     },
   });
 
   const rectX = useSharedValue(100);
   const rectY = useSharedValue(100);
 
-  const rectGesture = useGestureHandler<{ x: number; y: number }>({
-    onStart: (_, context) => {
-      'worklet';
-      context.x = rectX.value;
-      context.y = rectY.value;
+  const rectContext = useSharedValue({
+    x: 0,
+    y: 0,
+  });
+
+  const rectGesture = useGestureHandler({
+    onStart: () => {
+      rectContext.value = {
+        x: rectX.value,
+        y: rectY.value,
+      };
     },
-    onActive: ({ translationX, translationY }, context) => {
-      'worklet';
-      rectX.value = context.x + translationX;
-      rectY.value = context.y + translationY;
+    onActive: ({ translationX, translationY }) => {
+      rectX.value = rectContext.value.x + translationX;
+      rectY.value = rectContext.value.y + translationY;
     },
   });
 

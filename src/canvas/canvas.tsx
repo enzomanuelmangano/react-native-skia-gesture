@@ -60,7 +60,7 @@ const Canvas: React.FC<TouchableCanvasProps> = ({
         const touchableItem = loadedRefs[key];
         const isPointInPath = touchableItem?.isPointInPath(event);
         if (isPointInPath && touchableItem?.onStart) {
-          activeKey.value.push(`${key}__${event.handlerTag}`);
+          activeKey.value = [`${key}__${event.handlerTag}`];
           touchableItem.onStart?.(event);
         }
       }
