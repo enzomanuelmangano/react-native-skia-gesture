@@ -25,7 +25,7 @@ function App() {
   });
 
   const circleGesture = useGestureHandler({
-    onStart: (_) => {
+    onStart: () => {
       'worklet';
       circleContext.value = {
         x: cx.value,
@@ -48,7 +48,7 @@ function App() {
   });
 
   const rectGesture = useGestureHandler({
-    onStart: (_) => {
+    onStart: () => {
       rectContext.value = {
         x: rectX.value,
         y: rectY.value,
