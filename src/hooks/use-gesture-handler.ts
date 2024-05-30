@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
 
 import type {
   GestureStateChangeEvent,
@@ -7,44 +6,37 @@ import type {
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 
-type UseGestureHandlerParams<ContextType> = {
+type UseGestureHandlerParams = {
   onStart?: (
-    touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
-    context: ContextType
+    touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
   ) => void;
   onActive?: (
-    touchInfo: GestureUpdateEvent<PanGestureHandlerEventPayload>,
-    context: ContextType
+    touchInfo: GestureUpdateEvent<PanGestureHandlerEventPayload>
   ) => void;
   onEnd?: (
-    touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
-    context: ContextType
+    touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
   ) => void;
 };
 
-const useGestureHandler = <ContextType>(
-  gestureHandlers: UseGestureHandlerParams<ContextType>
-) => {
+const useGestureHandler = (gestureHandlers: UseGestureHandlerParams) => {
   const { onStart, onActive, onEnd } = gestureHandlers;
-
-  const context = useSharedValue<ContextType>({} as any);
 
   const handleStart = useCallback(
     (touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
       'worklet';
       if (!onStart) return;
-      return onStart(touchInfo, context.value);
+      return onStart(touchInfo);
     },
-    [context, onStart]
+    [onStart]
   );
 
   const handleActive = useCallback(
     (extendedTouchInfo: GestureUpdateEvent<PanGestureHandlerEventPayload>) => {
       'worklet';
       if (!onActive) return;
-      return onActive(extendedTouchInfo, context.value);
+      return onActive(extendedTouchInfo);
     },
-    [context, onActive]
+    [onActive]
   );
 
   const handleEnd = useCallback(
@@ -53,9 +45,9 @@ const useGestureHandler = <ContextType>(
     ) => {
       'worklet';
       if (!onEnd) return;
-      return onEnd(extendedTouchInfo, context.value);
+      return onEnd(extendedTouchInfo);
     },
-    [context, onEnd]
+    [onEnd]
   );
 
   return {
