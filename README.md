@@ -62,7 +62,7 @@ export default function App() {
         y: cy.value,
       }
     },
-    onActive: ({ translationX, translationY }, context) => {
+    onActive: ({ translationX, translationY }) => {
       'worklet';
       cx.value = context.value.x + translationX;
       cy.value = context.value.y + translationY;

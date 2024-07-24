@@ -5,7 +5,7 @@ import {
   GestureDetector,
   PanGesture,
 } from 'react-native-gesture-handler';
-import Animated, { useSharedValue } from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
 
 import {
   TouchHandlerContext,
@@ -18,8 +18,6 @@ type TouchableCanvasProps = CanvasProps & {
   panGesture?: PanGesture;
   timeoutBeforeCollectingRefs?: number; // default 100
 };
-
-const AnimatedSkiaCanvas = Animated.createAnimatedComponent(SkiaCanvas);
 
 const Canvas: React.FC<TouchableCanvasProps> = ({
   children,
@@ -54,6 +52,7 @@ const Canvas: React.FC<TouchableCanvasProps> = ({
 
   const mainGesture = panGesture
     .onBegin((event) => {
+      'worklet';
       const keys = Object.keys(loadedRefs);
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i] as string;
@@ -66,6 +65,7 @@ const Canvas: React.FC<TouchableCanvasProps> = ({
       }
     })
     .onUpdate((event) => {
+      'worklet';
       const activatedKey = activeKey.value.find((key) =>
         key.includes(event.handlerTag.toString())
       );
@@ -83,6 +83,7 @@ const Canvas: React.FC<TouchableCanvasProps> = ({
       return touchableItem?.onActive?.(event);
     })
     .onFinalize((event) => {
+      'worklet';
       const activatedKey = activeKey.value.find((key) =>
         key.includes(event.handlerTag.toString())
       );
@@ -108,11 +109,11 @@ const Canvas: React.FC<TouchableCanvasProps> = ({
 
   return (
     <GestureDetector gesture={mainGesture}>
-      <AnimatedSkiaCanvas {...props}>
+      <SkiaCanvas {...props}>
         <TouchHandlerContext.Provider value={touchableRefs}>
           {children}
         </TouchHandlerContext.Provider>
-      </AnimatedSkiaCanvas>
+      </SkiaCanvas>
     </GestureDetector>
   );
 };
