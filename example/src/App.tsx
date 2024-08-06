@@ -49,12 +49,14 @@ function App() {
 
   const rectGesture = useGestureHandler({
     onStart: () => {
+      'worklet';
       rectContext.value = {
         x: rectX.value,
         y: rectY.value,
       };
     },
     onActive: ({ translationX, translationY }) => {
+      'worklet';
       rectX.value = rectContext.value.x + translationX;
       rectY.value = rectContext.value.y + translationY;
     },
