@@ -15,6 +15,9 @@ const unwrapAnimatedValueObject = <T>(
 ): Record<any, T> => {
   'worklet';
   return Object.keys(value).reduce((acc, key) => {
+    if (value[key] == null) {
+      return acc;
+    }
     return { ...acc, [key]: unwrapAnimatedValue(value[key]) };
   }, {});
 };
