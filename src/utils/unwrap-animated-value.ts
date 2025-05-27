@@ -11,12 +11,16 @@ const unwrapAnimatedValue = <T>(value: SharedValue<T> | T): T => {
 };
 
 const unwrapAnimatedValueObject = <T>(
-  value: Record<any, SharedValue<T> | T>
-): Record<any, T> => {
+  value: Record<string, SharedValue<T> | T>
+): Record<string, T> => {
   'worklet';
   return Object.keys(value).reduce((acc, key) => {
-    return { ...acc, [key]: unwrapAnimatedValue(value[key]) };
-  }, {});
+    const val = value[key];
+    if (val !== undefined) {
+      return { ...acc, [key]: unwrapAnimatedValue(val) };
+    }
+    return acc;
+  }, {} as Record<string, T>);
 };
 
 export { unwrapAnimatedValue, unwrapAnimatedValueObject };
