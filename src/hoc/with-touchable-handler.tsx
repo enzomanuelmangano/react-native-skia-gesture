@@ -61,7 +61,7 @@ const withTouchableHandler = <T,>(
     ...props
   }: WithTouchableHandlerProps<T>) => {
     const id = useId();
-    const ref = useTouchHandlerContext();
+    const refManager = useTouchHandlerContext();
 
     const onStart: TouchableHandlerProps['onStart'] = useCallback(
       (event) => {
@@ -104,23 +104,19 @@ const withTouchableHandler = <T,>(
     );
 
     useEffect(() => {
-      ref.value = {
-        [`id:${id}`]: {
-          isPointInPath,
-          onStart,
-          onActive,
-          onEnd,
-        },
-        ...ref.value,
-      } as any;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, isPointInPath, onActive, onEnd, onStart]);
-
-    useEffect(() => {
-      return () => {
-        delete ref.value?.[`id:${id}`];
+      const refData = {
+        isPointInPath,
+        onStart,
+        onActive,
+        onEnd,
       };
-    }, [id, props, ref, touchablePath]);
+
+      refManager.register(`id:${id}`, refData);
+
+      return () => {
+        refManager.unregister(`id:${id}`);
+      };
+    }, [id, refManager, isPointInPath, onStart, onActive, onEnd]);
 
     return Component(props as any);
   };
