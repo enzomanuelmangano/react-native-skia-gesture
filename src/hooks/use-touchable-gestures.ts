@@ -61,7 +61,7 @@ export const useTouchableGestures = ({
     [activeKey, touchableRefs]
   );
 
-  const mainGesture = useMemo(
+  const mainPanGesture = useMemo(
     () =>
       panGesture
         .onBegin((event) => {
@@ -96,7 +96,7 @@ export const useTouchableGestures = ({
     () =>
       tapGesture.onTouchesUp((event) => {
         'worklet';
-        // Convert touch event to point for hit testing
+        // TODO: consider handling multiple touches
         const point = {
           x: event.allTouches[0]?.x || 0,
           y: event.allTouches[0]?.y || 0,
@@ -110,8 +110,8 @@ export const useTouchableGestures = ({
   );
 
   const gesture = useMemo(
-    () => Gesture.Simultaneous(mainGesture, mainTapGesture),
-    [mainGesture, mainTapGesture]
+    () => Gesture.Simultaneous(mainPanGesture, mainTapGesture),
+    [mainPanGesture, mainTapGesture]
   );
 
   return {
