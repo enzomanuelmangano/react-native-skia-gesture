@@ -11,11 +11,9 @@ Therefore direct interactions with individual Skia components can only be achiev
 
 This package, simply provides a set of APIs to be able to interact directly with individual components.
 
-
 <a href="https://github.com/enzomanuelmangano/react-native-skia-gesture"> 
   <img src="https://raw.githubusercontent.com/enzomanuelmangano/react-native-skia-gesture/main/.assets/demo.gif" title="react-native-skia-gesture">
 </a>
-
 
 ## Installation
 
@@ -40,13 +38,9 @@ yarn add react-native-skia-gesture
 ## Usage
 
 ```jsx
-import {
-  useSharedValue,
-} from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
 
-import Touchable, {
-  useGestureHandler,
-} from 'react-native-skia-gesture';
+import Touchable, { useGestureHandler } from 'react-native-skia-gesture';
 
 export default function App() {
   const cx = useSharedValue(100);
@@ -60,7 +54,7 @@ export default function App() {
       context.value = {
         x: cx.value,
         y: cy.value,
-      }
+      };
     },
     onActive: ({ translationX, translationY }) => {
       'worklet';

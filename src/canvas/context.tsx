@@ -1,36 +1,18 @@
 import React, { useContext } from 'react';
+import { TouchableRefManager } from './ref-manager';
 
-import type { Vector } from '@shopify/react-native-skia';
-import type {
-  GestureStateChangeEvent,
-  GestureUpdateEvent,
-  PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler';
-
-export type TouchableHandlerContextType = {
-  value: Record<
-    string,
-    {
-      onStart: (
-        touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
-      ) => void;
-      onActive: (
-        touchInfo: GestureUpdateEvent<PanGestureHandlerEventPayload>
-      ) => void;
-      onEnd: (
-        touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
-      ) => void;
-      isPointInPath: (point: Vector) => boolean;
-    }
-  >;
-};
-
-const TouchHandlerContext = React.createContext<TouchableHandlerContextType>({
-  value: {},
-});
+const TouchHandlerContext = React.createContext<TouchableRefManager | null>(
+  null
+);
 
 const useTouchHandlerContext = () => {
-  return useContext(TouchHandlerContext);
+  const context = useContext(TouchHandlerContext);
+  if (!context) {
+    throw new Error(
+      'useTouchHandlerContext must be used within TouchHandlerContext.Provider'
+    );
+  }
+  return context;
 };
 
 export { TouchHandlerContext, useTouchHandlerContext };
