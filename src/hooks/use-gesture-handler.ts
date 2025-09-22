@@ -4,6 +4,7 @@ import type {
   GestureStateChangeEvent,
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
+  GestureTouchEvent,
 } from 'react-native-gesture-handler';
 
 type UseGestureHandlerParams = {
@@ -16,10 +17,11 @@ type UseGestureHandlerParams = {
   onEnd?: (
     touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
   ) => void;
+  onTap?: (touchInfo: GestureTouchEvent) => void;
 };
 
 const useGestureHandler = (gestureHandlers: UseGestureHandlerParams) => {
-  const { onStart, onActive, onEnd } = gestureHandlers;
+  const { onStart, onActive, onEnd, onTap } = gestureHandlers;
 
   const handleStart = useCallback(
     (touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
@@ -50,10 +52,20 @@ const useGestureHandler = (gestureHandlers: UseGestureHandlerParams) => {
     [onEnd]
   );
 
+  const handleTap = useCallback(
+    (touchInfo: GestureTouchEvent) => {
+      'worklet';
+      if (!onTap) return;
+      return onTap(touchInfo);
+    },
+    [onTap]
+  );
+
   return {
     onStart: handleStart,
     onActive: handleActive,
     onEnd: handleEnd,
+    onTap: handleTap,
   };
 };
 

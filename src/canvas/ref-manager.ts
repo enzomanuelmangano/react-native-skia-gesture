@@ -3,6 +3,7 @@ import type {
   GestureStateChangeEvent,
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
+  GestureTouchEvent,
 } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
 
@@ -16,6 +17,7 @@ export type TouchableRef = {
   onEnd?: (
     touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
   ) => void;
+  onTap?: (touchInfo: GestureTouchEvent) => void;
   isPointInPath: (point: Vector) => boolean;
 };
 

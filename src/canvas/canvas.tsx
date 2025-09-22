@@ -4,6 +4,7 @@ import {
   Gesture,
   GestureDetector,
   PanGesture,
+  TapGesture,
 } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
 
@@ -14,11 +15,13 @@ import type { CanvasProps } from '@shopify/react-native-skia';
 
 type TouchableCanvasProps = CanvasProps & {
   panGesture?: PanGesture;
+  tapGesture?: TapGesture;
 };
 
 const Canvas: React.FC<TouchableCanvasProps> = ({
   children,
   panGesture = Gesture.Pan(),
+  tapGesture = Gesture.Tap(),
   ...props
 }) => {
   const touchableRefs = useSharedValue<Record<string, TouchableRef>>({});
@@ -84,8 +87,33 @@ const Canvas: React.FC<TouchableCanvasProps> = ({
       return touchableItem?.onEnd?.(event);
     });
 
+  const mainTapGesture = tapGesture.onTouchesUp((event) => {
+    'worklet';
+    const refs = touchableRefs.value;
+    const keys = Object.keys(refs);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      if (!key) continue;
+      const touchableItem = refs[key];
+      if (!touchableItem) continue;
+
+      // Convert touch event to point for hit testing
+      const point = {
+        x: event.allTouches[0]?.x || 0,
+        y: event.allTouches[0]?.y || 0,
+      };
+      const isPointInPath = touchableItem.isPointInPath(point);
+      if (isPointInPath && touchableItem.onTap) {
+        touchableItem.onTap(event);
+        break; // Only handle the first matching element
+      }
+    }
+  });
+
+  const combinedGesture = Gesture.Simultaneous(mainGesture, mainTapGesture);
+
   return (
-    <GestureDetector gesture={mainGesture}>
+    <GestureDetector gesture={combinedGesture}>
       <SkiaCanvas {...props}>
         <TouchHandlerContext.Provider value={refManager}>
           {children}

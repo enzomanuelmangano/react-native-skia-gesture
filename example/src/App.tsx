@@ -37,6 +37,10 @@ function App() {
       cx.value = circleContext.value.x + translationX;
       cy.value = circleContext.value.y + translationY;
     },
+    onTap: () => {
+      'worklet';
+      console.log('tapped');
+    },
   });
 
   const rectX = useSharedValue(100);

@@ -13,6 +13,7 @@ import type {
   GestureStateChangeEvent,
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
+  GestureTouchEvent,
 } from 'react-native-gesture-handler';
 import { SharedValue } from 'react-native-reanimated';
 
@@ -26,6 +27,7 @@ export type TouchableHandlerProps = {
   onEnd: (
     touchInfo: GestureStateChangeEvent<PanGestureHandlerEventPayload>
   ) => void;
+  onTap: (touchInfo: GestureTouchEvent) => void;
   touchablePath: SkPath | SharedValue<SkPath>;
 };
 
@@ -57,6 +59,7 @@ const withTouchableHandler = <T,>(
     onStart: onStartProp,
     onActive: onActiveProp,
     onEnd: onEndProp,
+    onTap: onTapProp,
     touchablePath,
     ...props
   }: WithTouchableHandlerProps<T>) => {
@@ -85,6 +88,14 @@ const withTouchableHandler = <T,>(
       [onEndProp]
     );
 
+    const onTap: TouchableHandlerProps['onTap'] = useCallback(
+      (event) => {
+        'worklet';
+        return onTapProp?.(event);
+      },
+      [onTapProp]
+    );
+
     const isPointInPath = useCallback(
       (point: Vector) => {
         'worklet';
@@ -109,6 +120,7 @@ const withTouchableHandler = <T,>(
         onStart,
         onActive,
         onEnd,
+        onTap,
       };
 
       refManager.register(`id:${id}`, refData);
@@ -116,7 +128,7 @@ const withTouchableHandler = <T,>(
       return () => {
         refManager.unregister(`id:${id}`);
       };
-    }, [id, refManager, isPointInPath, onStart, onActive, onEnd]);
+    }, [id, refManager, isPointInPath, onStart, onActive, onEnd, onTap]);
 
     return Component(props as any);
   };
